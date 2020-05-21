@@ -182,5 +182,8 @@ export default {
   .logout-cell {
     text-align: center;
   }
+  .mb-9 {
+    margin-bottom: 9px;
+  }
 }
 </style>
