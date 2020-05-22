@@ -2,6 +2,7 @@ import axios from 'axios'
 import store from '@/store/index'
 var request = axios.create({
   baseURL: 'http://ttapi.research.itcast.cn'
+  // baseURL: 'http://api-toutiao-web.itheima.net/'
 })
 request.interceptors.request.use(
   function (config) {
