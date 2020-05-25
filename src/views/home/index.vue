@@ -1,7 +1,7 @@
 <template>
   <div class="houme-container">
     <!-- 导航栏 -->
-    <van-nav-bar class="page-nav-bar">
+    <van-nav-bar class="page-nav-bar" fixed>
       <van-button class="search-btn" slot="title" type="info" size="small" icon="search" round>搜索</van-button>
     </van-nav-bar>
     <!-- 频道列表 -->
@@ -42,12 +42,18 @@ export default {
         console.log(err)
       }
     }
+    /** function findScroller(element) {
+    element.onscroll =  function() {console.log(element)}
+    Array.from(element.children).forEach(findScroller)
+}
+findScroller(document.body) */
   }
 }
 </script>
 <style lang="less" scoped>
 .houme-container {
   padding-bottom: 100px;
+  padding-top: 174px;
   .search-btn {
     width: 555px;
     height: 64px;
@@ -61,6 +67,11 @@ export default {
   /deep/ .channel-tabs {
     .van-tabs__wrap {
       height: 82px;
+      position: fixed;
+      top: 92px;
+      z-index: 1;
+      left: 0;
+      right: 0;
     }
     .van-tab {
       border-right: 1px solid #edeff3;
