@@ -10,7 +10,7 @@
       <div class="label-info-wrap">
         <span>{{ article.aut_name }}</span>
         <span>{{ article.comm_count }}评论</span>
-        <span>{{ article.pubdate }}评论</span>
+        <span>{{ article.pubdate | relativeTime }}评论</span>
       </div>
     </div>
     <van-image fit="cover" class="right-cover" v-if="article.cover.type === 1" :src="article.cover.images[0]" slot="default" />

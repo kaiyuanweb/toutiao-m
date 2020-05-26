@@ -7,33 +7,44 @@
     <!-- 频道列表 -->
     <van-tabs class="channel-tabs" v-model="active" animated swipeable>
       <van-tab v-for="item in channels" :key="item.id" :title="item.name">
-        <ArticleList :channel="item"></ArticleList>
+        <article-list :channel="item"></article-list>
       </van-tab>
       <div slot="nav-right" class="placeholder"></div>
-      <div slot="nav-right" class="hamburger-btn">
+      <div slot="nav-right" class="hamburger-btn" @click="isChanneEditShow = true">
         <i class="iconfont icongengduo"></i>
       </div>
     </van-tabs>
+    <!-- 频道编辑弹出层 -->
+    <van-popup v-model="isChanneEditShow" closeable position="bottom" close-icon-position="top-left" :style="{ height: '100%' }">
+      <channel-edit @update-active="onUpdateActive" :active="active" :my-channels="channels"></channel-edit>
+    </van-popup>
   </div>
 </template>
 <script>
 import { getUserChannels } from '@/api/user'
 import ArticleList from './components/article-list.vue'
+import ChannelEdit from './components/channel-edit.vue'
 export default {
   name: 'houmeIndex',
   components: {
-    ArticleList
+    ArticleList,
+    ChannelEdit
   },
   data () {
     return {
       active: 0,
-      channels: [] // 频道列表
+      channels: [], // 频道列表
+      isChanneEditShow: false
     }
   },
   created () {
     this.loadChannels()
   },
   methods: {
+    onUpdateActive (index, isChannelEditShow = true) {
+      this.active = index
+      this.isChanneEditShow = isChannelEditShow
+    },
     async loadChannels () {
       try {
         const { data } = await getUserChannels()
