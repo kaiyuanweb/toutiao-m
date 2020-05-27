@@ -24,6 +24,8 @@
 import { getUserChannels } from '@/api/user'
 import ArticleList from './components/article-list.vue'
 import ChannelEdit from './components/channel-edit.vue'
+import { mapState } from 'vuex'
+import { getItem } from '@/utils/storage'
 export default {
   name: 'houmeIndex',
   components: {
@@ -37,6 +39,9 @@ export default {
       isChanneEditShow: false
     }
   },
+  computed: {
+    ...mapState(['user'])
+  },
   created () {
     this.loadChannels()
   },
@@ -47,8 +52,19 @@ export default {
     },
     async loadChannels () {
       try {
-        const { data } = await getUserChannels()
-        this.channels = data.data.channels
+        if (this.user) {
+          const { data } = await getUserChannels()
+          this.channels = data.data.channels
+        } else {
+          const localChannels = getItem('TOUTIAO_CHANNELS')
+          if (localChannels) {
+            this.channels = localChannels
+          } else {
+            // 没有存储  也没有登录  值请求返回默认的频道列表（接口对没有登录的返回默认频道列表）
+            const { data } = await getUserChannels()
+            this.channels = data.data.channels
+          }
+        }
       } catch (err) {
         console.log(err)
       }

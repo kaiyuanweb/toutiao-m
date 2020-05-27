@@ -20,7 +20,9 @@
   </div>
 </template>
 <script>
-import { getAllChannels } from '@/api/channel'
+import { getAllChannels, addUserChannel, delUserChannel } from '@/api/channel'
+import { mapState } from 'vuex'
+import { setItem } from '@/utils/storage'
 export default {
   name: 'ChannelEdit',
   props: {
@@ -34,6 +36,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['user']),
     // recommendChannels () {
     //   return this.allChannels.filter(channel => {
     //     return !this.myChannels.find(myChannel => {
@@ -74,8 +77,20 @@ export default {
         this.$toast('数据获取失败')
       }
     },
-    onAddChannel (channel) {
+    async onAddChannel (channel) {
       this.myChannels.push(channel)
+      // 数据持久化处理
+      if (this.user) {
+        // 已登录
+        try {
+          await addUserChannel({ id: channel.id, seq: this.myChannels.length })
+        } catch (err) {
+          this.$toast('数据获取失败')
+        }
+      } else {
+        // 未登录
+        setItem('TOUTIAO_CHANNELS', this.myChannels)
+      }
     },
     onMyChannelClick (channel, index) {
       if (this.isEdit) {
@@ -87,9 +102,22 @@ export default {
         if (index <= this.active) {
           this.$emit('update-active', this.active - 1)
         }
+        // 处理持久化
+        this.delChannel(channel)
       } else {
         // 切换操作
         this.$emit('update-active', index, false)
+      }
+    },
+    async delChannel (channel) {
+      if (this.user) {
+        try {
+          await delUserChannel(channel.id)
+        } catch (err) {
+          this.$toast('操作失败，请稍后重试')
+        }
+      } else {
+        setItem('TOUTIAO_CHANNELS', this.myChannels)
       }
     }
   }
