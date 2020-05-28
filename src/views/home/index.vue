@@ -1,22 +1,43 @@
 <template>
   <div class="houme-container">
     <!-- 导航栏 -->
-    <van-nav-bar class="page-nav-bar" fixed>
-      <van-button class="search-btn" slot="title" type="info" size="small" icon="search" round>搜索</van-button>
+    <van-nav-bar class="page-nav-bar"
+                 fixed>
+      <van-button to="/search"
+                  class="search-btn"
+                  slot="title"
+                  type="info"
+                  size="small"
+                  icon="search"
+                  round>搜索</van-button>
     </van-nav-bar>
     <!-- 频道列表 -->
-    <van-tabs class="channel-tabs" v-model="active" animated swipeable>
-      <van-tab v-for="item in channels" :key="item.id" :title="item.name">
+    <van-tabs class="channel-tabs"
+              v-model="active"
+              animated
+              swipeable>
+      <van-tab v-for="item in channels"
+               :key="item.id"
+               :title="item.name">
         <article-list :channel="item"></article-list>
       </van-tab>
-      <div slot="nav-right" class="placeholder"></div>
-      <div slot="nav-right" class="hamburger-btn" @click="isChanneEditShow = true">
+      <div slot="nav-right"
+           class="placeholder"></div>
+      <div slot="nav-right"
+           class="hamburger-btn"
+           @click="isChanneEditShow = true">
         <i class="iconfont icongengduo"></i>
       </div>
     </van-tabs>
     <!-- 频道编辑弹出层 -->
-    <van-popup v-model="isChanneEditShow" closeable position="bottom" close-icon-position="top-left" :style="{ height: '100%' }">
-      <channel-edit @update-active="onUpdateActive" :active="active" :my-channels="channels"></channel-edit>
+    <van-popup v-model="isChanneEditShow"
+               closeable
+               position="bottom"
+               close-icon-position="top-left"
+               :style="{ height: '100%' }">
+      <channel-edit @update-active="onUpdateActive"
+                    :active="active"
+                    :my-channels="channels"></channel-edit>
     </van-popup>
   </div>
 </template>
