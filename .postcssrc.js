@@ -11,11 +11,12 @@ module.exports = {
       // vant  是基于375  写的  所以应该是37.5
       // 查阅文档 rootValue 支持 两种数据类型  一种数字 一种 函数
       // rootValue: 37.5,
-      rootValue ({ file }) {
+      rootValue({ file }) {
         return file.indexOf('vant') !== -1 ? 37.5 : 75
         // return 37.5
       },
-      propList: ['*']
+      propList: ['*'],
+      exclude: 'github-markdown'
     }
   }
 }

@@ -1,10 +1,25 @@
 <template>
-  <van-cell class="article-Item">
-    <div class="title van-multi-ellipsis--l2" slot="title">{{ article.title }}</div>
+  <!-- :to="'/article/'+article.art_id"
+   :to="`/article/${article.art_id}`"
+   -->
+  <van-cell :to="{
+              name:'article',
+              params:{
+                articleId:article.art_id
+              }
+            }"
+            class="article-Item">
+    <div class="title van-multi-ellipsis--l2"
+         slot="title">{{ article.title }}</div>
     <div slot="label">
-      <div v-if="article.cover.type === 3" class="cover-wrap">
-        <div class="cover-item" v-for="(img, index) in article.cover.images" :key="index">
-          <van-image class="cover-item-img" :src="img" fit="cover" />
+      <div v-if="article.cover.type === 3"
+           class="cover-wrap">
+        <div class="cover-item"
+             v-for="(img, index) in article.cover.images"
+             :key="index">
+          <van-image class="cover-item-img"
+                     :src="img"
+                     fit="cover" />
         </div>
       </div>
       <div class="label-info-wrap">
@@ -13,7 +28,11 @@
         <span>{{ article.pubdate | relativeTime }}评论</span>
       </div>
     </div>
-    <van-image fit="cover" class="right-cover" v-if="article.cover.type === 1" :src="article.cover.images[0]" slot="default" />
+    <van-image fit="cover"
+               class="right-cover"
+               v-if="article.cover.type === 1"
+               :src="article.cover.images[0]"
+               slot="default" />
   </van-cell>
 </template>
 <script>
