@@ -70,6 +70,25 @@
              v-html="article.content"
              ref="article-content"></div>
         <van-divider>正文结束</van-divider>
+        <!-- 底部区域 -->
+        <div class="article-bottom">
+          <van-button class="comment-btn"
+                      type="default"
+                      round
+                      size="small">写评论</van-button>
+          <van-icon name="comment-o"
+                    info="123"
+                    color="#777" />
+          <collect-article v-model="article.is_collected"
+                           :article-id="article.art_id"
+                           class="btn-item">
+          </collect-article>
+          <van-icon color="#777"
+                    name="good-job-o" />
+          <van-icon name="share"
+                    color="#777777"></van-icon>
+        </div>
+        <!-- /底部区域 -->
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -92,23 +111,6 @@
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
 
-    <!-- 底部区域 -->
-    <div class="article-bottom">
-      <van-button class="comment-btn"
-                  type="default"
-                  round
-                  size="small">写评论</van-button>
-      <van-icon name="comment-o"
-                info="123"
-                color="#777" />
-      <collect-article class="btn-item">
-      </collect-article>
-      <van-icon color="#777"
-                name="good-job-o" />
-      <van-icon name="share"
-                color="#777777"></van-icon>
-    </div>
-    <!-- /底部区域 -->
   </div>
 </template>
 
