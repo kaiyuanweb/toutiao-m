@@ -36,17 +36,32 @@
                class="user-name">{{ article.aut_name }}</div>
           <div slot="label"
                class="publish-date">{{ article.pubdate | relativeTime }}</div>
+          <!-- 模板中的 $event 是事假参数
+               当我们传给子组件的数据 既要用又要修改  可以简写方式  v-model -->
+          <!-- v-model 默认  传 value='article.is_followed'  子组件接受的是 value
+                                     @input='article.is_followed = $event'  子组件发送的是input -->
+          <!-- 如果要修改传递的 v-model的规则名称 可以通过使用子组件的model属性来配置 -->
+          <!--  @update-is_followed="article.is_followed = $event"
+                      :is-followed='article.is_followed' -->
+          <!-- 一个组件上只能使用一次 v-model  如果有多少个数据要实现类似于 v-model  可以使用 .sync修饰符 -->
+          <follow-user class="follow-btn"
+                       v-model="article.is_followed"
+                       :user-id="article.aut_id"></follow-user>
+          <!-- <van-button class="follow-btn"
+                      v-if="article.is_followed"
+                      round
+                      :loading="followLoading"
+                      @click="onFollow"
+                      size="small">已关注</van-button>
           <van-button class="follow-btn"
+                      v-else
                       type="info"
                       color="#3296fa"
                       round
+                      :loading="followLoading"
                       size="small"
-                      icon="plus">关注</van-button>
-          <!-- <van-button
-            class="follow-btn"
-            round
-            size="small"
-          >已关注</van-button> -->
+                      @click="onFollow"
+                      icon="plus">关注</van-button> -->
         </van-cell>
         <!-- /用户信息 -->
 
@@ -86,8 +101,8 @@
       <van-icon name="comment-o"
                 info="123"
                 color="#777" />
-      <van-icon color="#777"
-                name="star-o" />
+      <collect-article class="btn-item">
+      </collect-article>
       <van-icon color="#777"
                 name="good-job-o" />
       <van-icon name="share"
@@ -99,11 +114,17 @@
 
 <script>
 import { getArticleById } from '@/api/article'
+import { addFollow, deleteFollow } from '@/api/user'
 import { ImagePreview } from 'vant'
+import CollectArticle from '../../components/collect-article'
+import FollowUser from '@/components/follow-user'
 
 export default {
   name: 'ArticleIndex',
-  components: {},
+  components: {
+    FollowUser,
+    CollectArticle
+  },
   props: {
     articleId: {
       type: [Number, String, Object],
@@ -114,7 +135,8 @@ export default {
     return {
       article: {}, // 文章详情
       loading: true, // 加载中的 loading 状态
-      errStatus: 0 // 失败的状态码
+      errStatus: 0, // 失败的状态码
+      followLoading: false
     }
   },
   computed: {},
@@ -124,6 +146,26 @@ export default {
   },
   mounted () { },
   methods: {
+    async onFollow () {
+      this.followLoading = true
+      try {
+        if (this.article.is_followed) {
+          await deleteFollow(this.article.aut_id)
+          // this.article.is_followed = false
+        } else {
+          await addFollow(this.article.aut_id)
+          // this.article.is_followed = true
+        }
+        this.article.is_followed = !this.article.is_followed
+      } catch (err) {
+        let message = '操作失败请重试'
+        if (err.response && err.response.status === 400) {
+          message = '不能关注自己'
+        }
+        this.$toast(message)
+      }
+      this.followLoading = false
+    },
     async loadArticle () {
       this.loading = true
       try {
@@ -240,9 +282,16 @@ export default {
     align-items: center;
     justify-content: center;
     background-color: #fff;
-    .van-icon {
+    /deep/ .van-icon {
       font-size: 122px;
       color: #b4b4b4;
+    }
+    .btn-item {
+      border: none;
+      padding: 0;
+      height: 40px;
+      line-height: 40px;
+      color: #777;
     }
     .text {
       font-size: 30px;
