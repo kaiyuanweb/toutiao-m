@@ -70,25 +70,40 @@
              v-html="article.content"
              ref="article-content"></div>
         <van-divider>正文结束</van-divider>
+        <!-- 评论列表 -->
+        <commen-list :source='article.art_id'
+                     :list="commenList"
+                     @onload-success='totalCommentCount = $event.total_count'></commen-list>
         <!-- 底部区域 -->
         <div class="article-bottom">
           <van-button class="comment-btn"
                       type="default"
                       round
+                      @click="isPostShow = true"
                       size="small">写评论</van-button>
           <van-icon name="comment-o"
-                    info="123"
+                    :info="totalCommentCount"
                     color="#777" />
           <collect-article v-model="article.is_collected"
                            :article-id="article.art_id"
                            class="btn-item">
           </collect-article>
-          <van-icon color="#777"
-                    name="good-job-o" />
+          <like-article class="btn-item"
+                        :article-id="article.art_id"
+                        v-model="article.attitude">
+          </like-article>
+          <!-- <van-icon color="#777"
+                    name="good-job-o" /> -->
           <van-icon name="share"
                     color="#777777"></van-icon>
         </div>
         <!-- /底部区域 -->
+        <!-- 发布评论 -->
+        <van-popup v-model="isPostShow"
+                   position="bottom">
+          <comment-post :target="article.art_id"
+                        @post-success="onPostSuccess"></comment-post>
+        </van-popup>
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -118,14 +133,19 @@
 import { getArticleById } from '@/api/article'
 import { addFollow, deleteFollow } from '@/api/user'
 import { ImagePreview } from 'vant'
-import CollectArticle from '../../components/collect-article'
+import CollectArticle from '@/components/collect-article'
 import FollowUser from '@/components/follow-user'
-
+import LikeArticle from '@/components/like-article'
+import CommenList from './components/comment-list'
+import CommentPost from './components/comment-post'
 export default {
   name: 'ArticleIndex',
   components: {
     FollowUser,
-    CollectArticle
+    CollectArticle,
+    LikeArticle,
+    CommenList,
+    CommentPost
   },
   props: {
     articleId: {
@@ -138,7 +158,10 @@ export default {
       article: {}, // 文章详情
       loading: true, // 加载中的 loading 状态
       errStatus: 0, // 失败的状态码
-      followLoading: false
+      followLoading: false,
+      totalCommentCount: 0,
+      isPostShow: false,
+      commenList: []
     }
   },
   computed: {},
@@ -148,6 +171,10 @@ export default {
   },
   mounted () { },
   methods: {
+    onPostSuccess (data) {
+      this.isPostShow = false
+      this.commenList.unshift(data.new_obj)
+    },
     async onFollow () {
       this.followLoading = true
       try {
