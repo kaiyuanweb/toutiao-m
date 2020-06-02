@@ -1,13 +1,19 @@
 <template>
   <div class="my-container">
-    <div v-if="user" class="header user-info">
+    <div v-if="user"
+         class="header user-info">
       <div class="base-info">
         <div class="left">
-          <van-image fit="cover" round class="avatar" :src="userInfo.photo" />
+          <van-image fit="cover"
+                     round
+                     class="avatar"
+                     :src="userInfo.photo" />
           <span class="name">{{ userInfo.name }}</span>
         </div>
         <div class="right">
-          <van-button size="mini" round>编辑资料</van-button>
+          <van-button to="/user/profile"
+                      size="mini"
+                      round>编辑资料</van-button>
         </div>
       </div>
       <div class="data-stats">
@@ -29,26 +35,43 @@
         </div>
       </div>
     </div>
-    <div v-else class="header not-login">
-      <div class="login-btn" @click="$router.push('/login')">
-        <img class="mobileImg" src="~@/assets/mobile.png" alt="" />
+    <div v-else
+         class="header not-login">
+      <div class="login-btn"
+           @click="$router.push('/login')">
+        <img class="mobileImg"
+             src="~@/assets/mobile.png"
+             alt="" />
         <span class="text">登录 / 注册</span>
       </div>
     </div>
     <!-- 导航 -->
-    <van-grid clickable class="grid-nav" :column-num="2">
+    <van-grid clickable
+              class="grid-nav"
+              :column-num="2">
       <van-grid-item class="grid-item">
-        <i slot="icon" class="iconfont iconshoucang"></i>
-        <span slot="text" class="text">收藏</span>
+        <i slot="icon"
+           class="iconfont iconshoucang"></i>
+        <span slot="text"
+              class="text">收藏</span>
       </van-grid-item>
       <van-grid-item class="grid-item">
-        <i slot="icon" class="iconfont iconlishi"></i>
-        <span slot="text" class="text">历史</span>
+        <i slot="icon"
+           class="iconfont iconlishi"></i>
+        <span slot="text"
+              class="text">历史</span>
       </van-grid-item>
     </van-grid>
-    <van-cell title="消息通知" is-link />
-    <van-cell class="mb-9" title="小智同学" is-link />
-    <van-cell clickable v-if="user" @click="onLogout" class="logout-cell" title="退出登录" />
+    <van-cell title="消息通知"
+              is-link />
+    <van-cell class="mb-9"
+              title="小智同学"
+              is-link />
+    <van-cell clickable
+              v-if="user"
+              @click="onLogout"
+              class="logout-cell"
+              title="退出登录" />
   </div>
 </template>
 <script>
@@ -75,7 +98,7 @@ export default {
         const { data } = await getUserInfo()
         console.log(data)
         this.userInfo = data.data
-      } catch (err) {}
+      } catch (err) { }
     },
     onLogout () {
       // 提示退出

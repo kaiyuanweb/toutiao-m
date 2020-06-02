@@ -4,9 +4,11 @@
             :error='error'
             error-text="加载失败，请重试"
             finished-text="没有更多了"
+            :immediate-check="false"
             @load="onLoad">
     <comment-item v-for="(item,index) in list"
                   :comment="item"
+                  @reply-click="$emit('reply-click',$event)"
                   :key="index" />
   </van-list>
 </template>
@@ -26,6 +28,13 @@ export default {
     list: {
       type: Array,
       default: () => []
+    },
+    type: {
+      type: String,
+      validator (value) {
+        return ['a', 'c'].includes(value)
+      },
+      default: 'a'
     }
   },
   data () {
@@ -39,13 +48,16 @@ export default {
     }
   },
   created () {
+    // 初始onload  不会loading   要手动初始loding
+    this.loading = true
     this.onLoad()
   },
   methods: {
     async  onLoad () {
       try {
+        // 获取文章评论和评论回复的回复是同一个接口
         const { data } = await getComments({
-          type: 'a', // a  文章  c评论
+          type: this.type, // a  文章  c评论
           source: this.source.toString(), // 文章id 或评论id
           offset: this.offset,
           limit: this.limit

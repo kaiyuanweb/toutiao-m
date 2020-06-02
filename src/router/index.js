@@ -21,6 +21,11 @@ const routes = [
     props: true
   },
   {
+    path: '/user/profile',
+    name: 'user-profile',
+    component: () => import('@/views/user-profile')
+  },
+  {
     path: '/',
     // name: 'LayoutIndex',
     component: () => import('@/views/layout'),

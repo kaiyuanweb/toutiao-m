@@ -73,6 +73,7 @@
         <!-- 评论列表 -->
         <commen-list :source='article.art_id'
                      :list="commenList"
+                     @reply-click="onReplyClick"
                      @onload-success='totalCommentCount = $event.total_count'></commen-list>
         <!-- 底部区域 -->
         <div class="article-bottom">
@@ -125,7 +126,17 @@
       </div>
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
-
+    <!-- 弹出层是蓝渲染  只有在第一次展示的时候会渲染里边的内容，之后关闭显示都是在切换内容 -->
+    <!-- 评论回复 -->
+    <van-popup v-model="isReplyShow"
+               style="height:100%"
+               position="bottom">
+      <!-- v-if条件渲染   true  渲染节点   false 不渲染 -->
+      <comment-reply @close="isReplyShow = false"
+                     v-if="isReplyShow"
+                     :comment="currentComment"></comment-reply>
+    </van-popup>
+    <!-- /评论回复 -->
   </div>
 </template>
 
@@ -138,6 +149,7 @@ import FollowUser from '@/components/follow-user'
 import LikeArticle from '@/components/like-article'
 import CommenList from './components/comment-list'
 import CommentPost from './components/comment-post'
+import CommentReply from './components/comment-reply'
 export default {
   name: 'ArticleIndex',
   components: {
@@ -145,7 +157,14 @@ export default {
     CollectArticle,
     LikeArticle,
     CommenList,
-    CommentPost
+    CommentPost,
+    CommentReply
+  },
+  // 给说有的后代组件提供数据   不要滥用
+  provide: function () {
+    return {
+      articleId: this.articleId
+    }
   },
   props: {
     articleId: {
@@ -161,7 +180,9 @@ export default {
       followLoading: false,
       totalCommentCount: 0,
       isPostShow: false,
-      commenList: []
+      commenList: [],
+      isReplyShow: false, // 回复弹窗
+      currentComment: {} // 当前点击评论回复项
     }
   },
   computed: {},
@@ -171,6 +192,11 @@ export default {
   },
   mounted () { },
   methods: {
+    // 评论回复
+    onReplyClick (comment) {
+      this.currentComment = comment
+      this.isReplyShow = true
+    },
     onPostSuccess (data) {
       this.isPostShow = false
       this.commenList.unshift(data.new_obj)
