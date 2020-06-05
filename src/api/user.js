@@ -1,6 +1,6 @@
 import axios from '@/utils/request'
 // import store from '@/store'
-export const login = (data) => {
+export const login = data => {
   return axios({
     method: 'POST',
     url: '/app/v1_0/authorizations',
@@ -8,7 +8,7 @@ export const login = (data) => {
   })
 }
 
-export const sendSMS = (mobile) => {
+export const sendSMS = mobile => {
   return axios({
     method: 'GET',
     url: `/app/v1_0/sms/codes/${mobile}`
@@ -33,7 +33,7 @@ export const getUserChannels = () => {
   })
 }
 // 关注用户
-export const addFollow = (target) => {
+export const addFollow = target => {
   return axios({
     method: 'POST',
     url: '/app/v1_0/user/followings',
@@ -43,7 +43,7 @@ export const addFollow = (target) => {
   })
 }
 // 取消关注用户
-export const deleteFollow = (target) => {
+export const deleteFollow = target => {
   return axios({
     method: 'DELETE',
     url: '/app/v1_0/user/followings/' + target
@@ -57,10 +57,18 @@ export const getUserProfile = () => {
   })
 }
 // 更新用户个人资料
-export const updateUserProfile = (data) => {
+export const updateUserProfile = data => {
   return axios({
     method: 'PATCH',
     url: '/app/v1_0/user/profile',
+    data
+  })
+}
+// 更新用户照片资料
+export const updateUserPhoto = data => {
+  return axios({
+    method: 'PATCH',
+    url: '/app/v1_0/user/photo',
     data
   })
 }

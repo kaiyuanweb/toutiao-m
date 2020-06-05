@@ -5,6 +5,7 @@
                 :default-index="value"
                 :columns="columns"
                 @confirm="onConfirm"
+                @change="onPickerChange"
                 @cancel="$emit('close')" />
   </div>
 </template>
@@ -20,7 +21,8 @@ export default {
   },
   data () {
     return {
-      columns: ['男', '女']
+      columns: ['男', '女'],
+      localGender: 0
     }
   },
   methods: {
@@ -31,18 +33,18 @@ export default {
         duration: 0
       })
       try {
-        const localName = this.localName
-        if (!localName.length) {
-          this.$toast('昵称不能为空')
-        }
-        const { data } = await updateUserProfile({ name: localName })
-        console.log(data)
-        this.$emit('input', localName)
-        this.$$emit('close')
+        const localGender = this.localGender
+        await updateUserProfile({ gender: localGender })
+        this.$emit('input', localGender)
+        this.$emit('close')
         this.$toast.success('更新成功')
       } catch (err) {
+        console.log(err)
         this.$toast.fail('更新失败')
       }
+    },
+    onPickerChange (picker, value, index) {
+      this.localGender = index
     }
   }
 }

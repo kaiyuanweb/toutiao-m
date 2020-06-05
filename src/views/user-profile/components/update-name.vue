@@ -47,7 +47,7 @@ export default {
         const { data } = await updateUserProfile({ name: localName })
         console.log(data)
         this.$emit('input', localName)
-        this.$$emit('close')
+        this.$emit('close')
         this.$toast.success('更新成功')
       } catch (err) {
         this.$toast.fail('更新失败')
